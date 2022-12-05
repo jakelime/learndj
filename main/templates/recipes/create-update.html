@@ -1,12 +1,16 @@
-{% extends 'base.html' %} {% block content %} {% if message %}
-<p>{{ message }}</p>
-{% endif %}
-
-<div style="margin-top: 30px">
-  <form action="." method="POST">
-    {% csrf_token %} {{ form.as_p }} {% if form_2 %} {{ form_2.as_p }} {% endif %}
-    <button stype="margin-top:10px;" type="submit">Save</button>
-  </form>
-</div>
-
+{% extends 'base.html' %}
+{% block content %}
+  {% if message %}<p>{{ message }}</p>{% endif %}
+  <div style="margin-top: 30px">
+    <form action="." method="POST">
+      <p><h2>Edit recipe:</h2></p>
+      {% csrf_token %}
+      {{ form.as_p }}
+      {% if form_2 %}
+        <p><h2>Ingredients:</h2></p>
+        {{ form_2.as_p }}
+      {% endif %}
+      <button stype="margin-top:10px;" type="submit">Save</button>
+    </form>
+  </div>
 {% endblock content %}
