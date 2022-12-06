@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
+  <style>
+    .ingredient-form {
+        border-bottom: 1px solid black;
+    }
 
-<style>
-  .ingredient-form{
-    border-bottom: 1px solid black;
-  }
-</style>
-
+    .hidden {
+        display: none
+    }
+  </style>
   {% if message %}<p>{{ message }}</p>{% endif %}
   <div style="margin-top: 30px">
     <form action="." method="POST">
@@ -24,14 +26,38 @@
         <p>
           <h2>Ingredients:</h2>
         </p>
-        {% for form in formset %}
-        <div class='ingredient-form'>
-          {{ form.as_p }}
+        {{ formset.management_form }}
+        <div id='ingredient-form-list'>
+          {% for form in formset %}<div class='ingredient-form'>{{ form.as_p }}</div>{% endfor %}
         </div>
-
-        {% endfor %}
+        <div id='empty-form' class='hidden'>{{ formset.empty_form }}</div>
+        <button id='add-more' type='button'>Add More</button>
       {% endif %}
       <button stype="margin-top:10px;" type="submit">Save</button>
     </form>
   </div>
+  <script>
+    const addMoreBtn = document.getElementById('add-more');
+    const totalNewForms = document.getElementById('id_form-TOTAL_FORMS')
+
+    addMoreBtn.addEventListener('click', add_new_form)
+
+    function add_new_form(args) {
+        if (event) {
+            event.preventDefault()
+        }
+        const currentIngredientForms = document.getElementsByClassName('ingredient-form')
+        console.log("currentIngredientForms.length = " + currentIngredientForms.length);
+        let currentFormCount = currentIngredientForms.length
+        const formCopyTarget = document.getElementById('ingredient-form-list');
+        const copyEmptyFormEl = document.getElementById('empty-form').cloneNode(true);
+        copyEmptyFormEl.setAttribute('class', 'ingredient-form');
+        copyEmptyFormEl.setAttribute('id', `form-${currentFormCount}`);
+        const regex = new RegExp('__prefix__', 'g');
+        copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount);
+        totalNewForms.setAttribute('value', currentFormCount + 1);
+        // now add new empty form element to our html form
+        formCopyTarget.append(copyEmptyFormEl);
+    }
+  </script>
 {% endblock content %}
