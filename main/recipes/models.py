@@ -64,12 +64,16 @@ class RecipeIngredient(models.Model):
         return measurement.to_base_units()
 
     def as_mks(self):
-        measurement = self.convert_to_system(system='mks')
-        return measurement.to_base_units()
+        # measurement = self.convert_to_system(system='mks')
+        # return measurement
+        return self.quantity_as_float
+
 
     def as_imperial(self):
-        measurement = self.convert_to_system(system='imperial')
-        return measurement.to_base_units()
+        # measurement = self.convert_to_system(system='imperial')
+        # return measurement
+        return self.quantity_as_float
+
 
     def save(self, *args, **kwargs):
         qty_as_float, qty_as_float_success = utils.number_str_to_float(self.quantity)

@@ -11,7 +11,7 @@
   </style>
   {% if message %}<p>{{ message }}</p>{% endif %}
   <div style="margin-top: 30px">
-    <form action="." method="POST">
+    <form action="." method="POST" hx-post=".">
       <p>
         <h2>Edit recipe:</h2>
         <p> Total price: {{ object.total_sum }}</p>
