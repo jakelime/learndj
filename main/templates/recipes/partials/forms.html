@@ -1,0 +1,37 @@
+<form action="." method="POST" hx-post="." hx-swap="outerHTML">
+    <style>
+        .ingredient-form {
+            border-bottom: 1px solid black;
+        }
+
+        .hidden {
+            display: none
+        }
+    </style>
+    <p>
+        <h2>Edit recipe:</h2>
+        <p>Total price: {{ object.total_sum }}</p>
+    </p>
+    {% csrf_token %}
+    {% for field in form %}
+        <div class='{% if field.field.required %}{{ form.required_css_class }}{% endif %}'>
+            {{ field.errors }} {{ field.label_tag }} {{ field }}
+            {% if field.help_text %}<p class="help">{{ field.help_text|safe }}</p>{% endif %}
+        </div>
+    {% endfor %}
+    {% if formset %}
+        <p>
+            <h2>Ingredients:</h2>
+        </p>
+        {{ formset.management_form }}
+        <div id='ingredient-form-list'>
+            {% for form in formset %}<div class='ingredient-form'>{{ form.as_p }}</div>{% endfor %}
+        </div>
+        <div id='empty-form' class='hidden'>{{ formset.empty_form }}</div>
+        <button id='add-more' type='button'>Add More</button>
+    {% endif %}
+    <div class='htmx-indicator'>Loading ...</div>
+    <button class='htmx-inverted-indicator' style="margin-top:10px;" type="submit">Save</button>
+    {% if message %}<p>{{ message }}</p>{% endif %}
+</form>
+

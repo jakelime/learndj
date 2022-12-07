@@ -1,23 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 
-<h2>
-  {{object.name}} ( {% if object.get_edit_url %}
-  <small>
-    <a href="{{ object.get_edit_url }}">Edit)</a>
-  </small>
-  {%endif %}
-</h2>
-
-<ul>
-  <li>{{object.description}}</li>
-  <li>{{object.directions}}</li>
-  <li>
-    <ul>
-      {% for ingredient in object.get_ingredients_children %}
-      <li>{{ingredient.name}} {{ingredient.as_mks}}</li>
-      {% endfor %}
-    </ul>
-  </li>
-</ul>
+<div hx-get='{{ hx_url }}' hx-trigger='revealed'>
+    <div class='htmx-indicator'>Loading..</div>
+</div>
 
 {% endblock %}

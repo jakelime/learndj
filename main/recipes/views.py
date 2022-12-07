@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from django.forms.models import modelformset_factory  # model form for query set
+from django.http import HttpResponse
 
 from .models import Recipe, RecipeIngredient
 from .forms import RecipeForm, RecipeIngredientForm
@@ -18,9 +19,27 @@ def recipe_list_view(request):
 
 @login_required
 def recipe_detail_view(request, id=None):
-    obj = get_object_or_404(Recipe, id=id)
-    context = {"object": obj}
+    hx_url = reverse("recipes:hx-detail", kwargs={"id": id})
+    context = {"hx_url": hx_url}
     return render(request, "recipes/detail.html", context)
+
+# @login_required
+# def recipe_detail_view(request, id=None):
+#     obj = get_object_or_404(Recipe, id=id, user=request.user)
+#     context = {"object": obj}
+#     return render(request, "recipes/detail.html", context)
+
+@login_required
+def recipe_detail_hx_view(request, id=None):
+    try:
+        obj = get_object_or_404(Recipe, id=id, user=request.user)
+    except:
+        obj = None
+
+    if obj is None:
+        return HttpResponse("Not found")
+    context = {"object": obj}
+    return render(request, "recipes/partials/detail.html", context)
 
 
 @login_required
@@ -58,7 +77,7 @@ def recipe_update_view(request, id=None):
             child.recipe = parent
             child.save()
         parent.save()
-        print(f"{form.cleaned_data = }")
-
         context["message"] = "Data saved."
+    if request.htmx:
+        return render(request, "recipes/partials/forms.html", context)
     return render(request, "recipes/create-update.html", context)

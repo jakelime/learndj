@@ -1,52 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-  <style>
-    .ingredient-form {
-        border-bottom: 1px solid black;
-    }
-
-    .hidden {
-        display: none
-    }
-  </style>
-  {% if message %}<p>{{ message }}</p>{% endif %}
-  <div style="margin-top: 30px">
-    <form action="." method="POST" hx-post=".">
-      <p>
-        <h2>Edit recipe:</h2>
-        <p> Total price: {{ object.total_sum }}</p>
-      </p>
-      {% csrf_token %}
-      {% for field in form %}
-        <div class='{% if field.field.required %}{{ form.required_css_class }}{% endif %}'>
-          {{ field.errors }} {{ field.label_tag }} {{ field }}
-          {% if field.help_text %}<p class="help">{{ field.help_text|safe }}</p>{% endif %}
-        </div>
-      {% endfor %}
-      {% if formset %}
-        <p>
-          <h2>Ingredients:</h2>
-        </p>
-        {{ formset.management_form }}
-        <div id='ingredient-form-list'>
-          {% for form in formset %}<div class='ingredient-form'>{{ form.as_p }}</div>{% endfor %}
-        </div>
-        <div id='empty-form' class='hidden'>{{ formset.empty_form }}</div>
-        <button id='add-more' type='button'>Add More</button>
-      {% endif %}
-      <button stype="margin-top:10px;" type="submit">Save</button>
-    </form>
-  </div>
+  <div style="margin-top: 30px">{% include 'recipes/partials/forms.html' %}</div>
   <script>
-    const addMoreBtn = document.getElementById('add-more');
-    const totalNewForms = document.getElementById('id_form-TOTAL_FORMS')
 
-    addMoreBtn.addEventListener('click', add_new_form)
+    document.addEventListener('click', (event) => {
+        if (event.target.id == "add-more") {
+            add_new_form(event)
+        }
+    })
 
     function add_new_form(args) {
         if (event) {
             event.preventDefault()
         }
+        const totalNewForms = document.getElementById('id_form-TOTAL_FORMS')
         const currentIngredientForms = document.getElementsByClassName('ingredient-form')
         console.log("currentIngredientForms.length = " + currentIngredientForms.length);
         let currentFormCount = currentIngredientForms.length

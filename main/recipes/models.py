@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.conf import settings
+import time
 
 import pint
 from . import validators, utils
@@ -22,6 +23,9 @@ class Recipe(models.Model):
 
     def get_edit_url(self):
         return reverse("recipes:update", kwargs={"id": self.id})
+
+    def get_hx_url(self):
+        return reverse("recipes:hx-detail", kwargs={"id": self.id})
 
     def get_ingredients_children(self):
         return self.recipeingredient_set.all()
@@ -65,6 +69,7 @@ class RecipeIngredient(models.Model):
 
     def as_mks(self):
         # measurement = self.convert_to_system(system='mks')
+        time.sleep(0.02)
         # return measurement
         return self.quantity_as_float
 

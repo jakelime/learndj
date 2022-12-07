@@ -7,9 +7,24 @@
   <head>
     {% load static %}
     <script src="{% static 'htmx.min.js' %}" defer></script>
+    <style>
+      .htmx-indicator {
+          display: none;
+      }
+      .htmx-inverted-indicator {
+        display: inline;
+    }
+      .htmx-request .htmx-indicator {
+          display: inline;
+      }
+      .htmx-request .htmx-inverted-indicator {
+        display: none;
+    }
+    </style>
   </head>
   <body>
     <h1>Recipe App</h1>
-    {% block content %}{% endblock content %}
+    {% block content %}
+    {% endblock content %}
   </body>
 </html>
