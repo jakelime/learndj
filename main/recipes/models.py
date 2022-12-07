@@ -15,6 +15,7 @@ class Recipe(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+    total_sum = models.FloatField(default=0)
 
     def get_absolute_url(self):
         return reverse("recipes:detail", kwargs={"id": self.id})
@@ -25,8 +26,19 @@ class Recipe(models.Model):
     def get_ingredients_children(self):
         return self.recipeingredient_set.all()
 
-    def get_ingredients_children(self):
-        return self.recipeingredient_set.all()
+    def save(self, *args, **kwargs):
+        prices = []
+        for ingredient in self.get_ingredients_children():
+            price = ingredient.quantity_as_float
+            if isinstance(price, float):
+                prices.append(price)
+        total_sum = sum(prices)
+        print(f"{total_sum=}")
+        if total_sum != self.total_sum:
+            self.total_sum = total_sum
+            super(Recipe, self).save(*args, **kwargs)
+            print(f"Total sum changed: {total_sum = }")
+        super().save(*args, **kwargs)
 
 
 class RecipeIngredient(models.Model):

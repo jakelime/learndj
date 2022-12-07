@@ -12,7 +12,7 @@ class RecipeIngredientInline(admin.StackedInline):
 
 class RecipeAdmin(admin.ModelAdmin):
     inlines = [RecipeIngredientInline]
-    list_display = ['name', 'user']
+    list_display = ['name', 'user', 'total_sum']
     readonly_fields = ['timestamp', 'updated']
     raw_id_fields = ['user']
 

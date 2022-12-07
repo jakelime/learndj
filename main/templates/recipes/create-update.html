@@ -14,6 +14,7 @@
     <form action="." method="POST">
       <p>
         <h2>Edit recipe:</h2>
+        <p> Total price: {{ object.total_sum }}</p>
       </p>
       {% csrf_token %}
       {% for field in form %}
